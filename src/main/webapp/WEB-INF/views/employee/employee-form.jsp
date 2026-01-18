@@ -4,6 +4,19 @@
         <jsp:include page="../common/header.jsp" />
 
         <div class="container mt-4">
+            <c:if test="${not empty success}">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    ${success}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </c:if>
+
+            <c:if test="${not empty error}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    ${error}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </c:if>
             <div class="row justify-content-center">
                 <div class="col-md-10">
                     <div class="card shadow-sm">
@@ -61,6 +74,47 @@
 
                                 <div class="row mb-3">
                                     <div class="col-md-6">
+                                        <label for="gender" class="form-label">Gender</label>
+                                        <div class="mt-2">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="gender"
+                                                    id="genderMale" value="MALE" ${employee.gender=='MALE' ? 'checked'
+                                                    : '' }>
+                                                <label class="form-check-label" for="genderMale">Male</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="gender"
+                                                    id="genderFemale" value="FEMALE" ${employee.gender=='FEMALE'
+                                                    ? 'checked' : '' }>
+                                                <label class="form-check-label" for="genderFemale">Female</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="gender"
+                                                    id="genderOther" value="OTHER" ${employee.gender=='OTHER'
+                                                    ? 'checked' : '' }>
+                                                <label class="form-check-label" for="genderOther">Other</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="basicSalary" class="form-label">Basic Salary (USD) *</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" class="form-control" id="basicSalary"
+                                                name="basicSalary" value="${employee.basicSalary}" required step="0.01"
+                                                min="0">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Residential Address</label>
+                                    <textarea class="form-control" id="address" name="address"
+                                        rows="2">${employee.address}</textarea>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
                                         <label for="department" class="form-label">Department *</label>
                                         <select class="form-select" id="department" name="department.id" required>
                                             <option value="">Select Department</option>
@@ -73,16 +127,16 @@
                                         </select>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="position" class="form-label">Position</label>
+                                        <label for="position" class="form-label">Position *</label>
                                         <input type="text" class="form-control" id="position" name="position"
-                                            value="${employee.position}" maxlength="100">
+                                            value="${employee.position}" required maxlength="100">
                                     </div>
                                 </div>
 
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="status" class="form-label">Status</label>
-                                        <select class="form-select" id="status" name="status">
+                                        <label for="status" class="form-label">Employee Status</label>
+                                        <select class="form-select border-primary" id="status" name="status">
                                             <option value="ACTIVE" ${employee.status=='ACTIVE' ? 'selected' : '' }>
                                                 ACTIVE</option>
                                             <option value="INACTIVE" ${employee.status=='INACTIVE' ? 'selected' : '' }>
@@ -90,7 +144,23 @@
                                             <option value="TERMINATED" ${employee.status=='TERMINATED' ? 'selected' : ''
                                                 }>TERMINATED</option>
                                         </select>
+                                        <div class="form-text">Note: Terminating an employee will disable their login
+                                            account.</div>
                                     </div>
+                                    <c:if test="${!isEdit}">
+                                        <div class="col-md-6 d-flex align-items-center justify-content-center">
+                                            <div class="card bg-light w-100 border-dashed p-2 text-center">
+                                                <div class="form-check form-switch d-inline-block">
+                                                    <input class="form-check-input" type="checkbox" id="createAccount"
+                                                        name="createAccount" value="true" checked>
+                                                    <label class="form-check-label fw-bold"
+                                                        for="createAccount">Provision System Access</label>
+                                                </div>
+                                                <div class="small text-muted mt-1">Creates user account with default
+                                                    password</div>
+                                            </div>
+                                        </div>
+                                    </c:if>
                                 </div>
 
                                 <div class="d-flex justify-content-between mt-4">

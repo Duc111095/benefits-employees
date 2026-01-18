@@ -39,9 +39,10 @@ Dự án được xây dựng nhằm:
 ## CHƯƠNG 2: PHÂN TÍCH YÊU CẦU VÀ NGHIỆP VỤ
 
 ### 2.1. Đối tượng sử dụng (Actors)
-1. **ADMIN**: Quản trị toàn bộ hệ thống, thiết lập danh mục nền tảng.
-2. **MANAGER (Giám đốc bộ phận)**: Phê duyệt các yêu cầu sử dụng phúc lợi của nhân viên cấp dưới, xem báo cáo chi phí bộ phận.
-3. **HR (Nhân sự)**: Cập nhật thông tin nhân viên, gán gói phúc lợi, nhập dữ liệu giao dịch và theo dõi lịch sử.
+1. **Employee (Nhân viên)**: Người lao động, xem/đăng ký phúc lợi, tạo yêu cầu thanh toán (claims), theo dõi trạng thái và quản lý thông tin cá nhân.
+2. **Manager (Trưởng phòng)**: Quản lý phòng ban, phê duyệt các yêu cầu thanh toán (claims) theo hạn mức gói phúc lợi của nhân viên cấp dưới.
+3. **HR Manager (Quản lý Nhân sự)**: Quản lý nhân viên và gói phúc lợi, phê duyệt đơn đăng ký, tạo báo cáo thống kê và gửi thông báo.
+4. **Admin**: Quản trị hệ thống cấp cao.
 
 ### 2.2. Quy trình nghiệp vụ cốt lõi (Core Workflows)
 
@@ -150,14 +151,19 @@ Bảng `enrollment_history` ghi lại mọi biến động: "Nâng cấp gói", 
 
 ## CHƯƠNG 9: BẢO MẬT, PHÂN QUYỀN VÀ TÌM KIẾM
 
-### 9.1. Quản lý Quyền hạn
-- **ADMIN**: Có quyền truy cập `Dashboard`, cấu trúc hệ thống, logs.
-- **HR**: Thao tác nghiệp vụ nhân sự và gán gói.
-- **MANAGER**: Phê duyệt claims của bộ phận mình.
+### 9.1. Quản lý Quyền hạn (Cập nhật)
+- **Employee (Nhân viên)**: Truy cập Menu "Self-Service" để xem phúc lợi hiện có, đăng ký gói mới, nộp yêu cầu thanh toán (claims) và xem lịch sử phê duyệt của riêng mình.
+- **Manager (Trưởng phòng)**: Phê duyệt claims của nhân viên trong phòng ban, quản lý hạn mức ngân sách cấp phòng.
+- **HR Manager (Quản lý Nhân sự)**: Toàn quyền quản lý nhân viên, danh mục gói phúc lợi, phê duyệt đăng ký (Enrollment) và xem báo cáo tổng hợp.
+- **Admin**: Quản trị hệ thống và cấu hình kỹ thuật.
 
----
+## CHƯƠNG 10: PHÂN HỆ SELF-SERVICE VÀ ĐĂNG KÝ (SELF-REGISTRATION)
 
-## CHƯƠNG 10: BÁO CÁO THỐNG KÊ VÀ HƯỚNG PHÁT TRIỂN
+Đây là phân hệ mới được bổ sung nhằm tối ưu hóa trải nghiệm người lao động:
+1. **Đăng ký tài khoản (Self-Registration)**: Nhân viên mới sử dụng **Mã nhân viên** được HR cấp để tự tạo tài khoản hệ thống. Hệ thống xác minh mã lỗi nếu không hợp lệ hoặc đã có tài khoản.
+2. **My Profile**: Nhân viên tự theo dõi thông tin cá nhân và vị trí công tác.
+3. **My Benefits**: Hiển thị các gói đang tham gia và các gói có sẵn để đăng ký.
+4. **My Claims**: Quy trình nộp hóa đơn thanh toán được số hóa 100%, giảm thiểu thời gian chờ đợi.
 
 ### 10.1. Dashboard Quản trị
 Hiển thị:
@@ -165,8 +171,25 @@ Hiển thị:
 - Số lượng đăng ký mới trong tháng.
 - Số lượng Claims đang chờ duyệt.
 
-### 10.2. Kết luận
-Hệ thống đáp ứng đầy đủ yêu cầu quản lý phúc lợi cho các doanh nghiệp nhỏ, đảm bảo tính chính xác, bảo mật và khả năng tra soát cao.
+## CHƯƠNG 11: CÁC USE CASE ĐIỂN HÌNH
+
+### 11.1. Use Case 1: Đăng ký tài khoản (Self-Registration)
+- **Tác nhân**: Nhân viên mới.
+- **Mô tả**: Nhân viên sử dụng Mã nhân viên để tự tạo tài khoản.
+- **Kết quả**: Tài khoản được tạo và liên kết trực tiếp với hồ sơ nhân sự.
+
+### 11.2. Use Case 2: Đăng nhập (Login)
+- **Tác nhân**: Mọi người dùng.
+- **Tính năng đặc biệt**: **Điều hướng thông minh (Role-based Redirection)**:
+    - **Admin**: Dashboard tổng thể.
+    - **HR Manager**: Trang quản lý nhân viên (`/employee`).
+    - **Manager**: Trang phê duyệt yêu cầu (`/claim`).
+    - **Employee**: Trang phúc lợi cá nhân (`/self-service/benefits`).
+
+### 11.3. Use Case 3: Đăng ký phúc lợi (Benefit Enrollment)
+- **Tác nhân**: Nhân viên (Employee).
+- **Mô tả**: Nhân viên chọn gói phúc lợi từ danh sách có sẵn, nhập ghi chú và gửi đơn đăng ký. Hệ thống kiểm tra điều kiện (không đăng ký trùng, gói còn hiệu lực) và lưu đơn.
+- **Kết quả**: Đơn được lưu với trạng thái "Chờ duyệt" (PENDING) và ghi nhận vào lịch sử thay đổi để HR Manager phê duyệt.
 
 ---
 **HẾT BÁO CÁO**

@@ -1,5 +1,6 @@
 package com.benefits.module.auth.entity;
 
+import com.benefits.module.employee.entity.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,7 +31,11 @@ public class User {
     private String email;
 
     @Column(nullable = false, length = 20)
-    private String role; // ADMIN, MANAGER, HR
+    private String role; // ADMIN, HR_MANAGER, MANAGER, EMPLOYEE
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 
     @Column(nullable = false)
     private Boolean active = true;

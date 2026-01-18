@@ -36,7 +36,7 @@ public class Enrollment {
     @Column(name = "enrollment_date", nullable = false)
     private LocalDate enrollmentDate;
 
-    @Column(name = "effective_date", nullable = false)
+    @Column(name = "effective_date")
     private LocalDate effectiveDate;
 
     @Column(name = "end_date")

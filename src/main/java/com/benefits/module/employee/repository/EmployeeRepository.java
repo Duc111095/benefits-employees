@@ -21,10 +21,15 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     List<Employee> findByStatus(String status);
 
     @Query("SELECT e FROM Employee e WHERE " +
-            "LOWER(e.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-            "LOWER(e.employeeCode) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-            "LOWER(e.email) LIKE LOWER(CONCAT('%', :keyword, '%'))")
-    List<Employee> searchByKeyword(@Param("keyword") String keyword);
+            "(:keyword IS NULL OR LOWER(e.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(e.employeeCode) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(e.email) LIKE LOWER(CONCAT('%', :keyword, '%'))) AND "
+            +
+            "(:departmentId IS NULL OR e.department.id = :departmentId) AND " +
+            "(:position IS NULL OR e.position = :position) AND " +
+            "(:status IS NULL OR e.status = :status)")
+    List<Employee> searchEmployees(@Param("keyword") String keyword,
+            @Param("departmentId") Long departmentId,
+            @Param("position") String position,
+            @Param("status") String status);
 
     Boolean existsByEmployeeCode(String employeeCode);
 

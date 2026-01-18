@@ -86,21 +86,25 @@
                             <div class="list-group list-group-flush">
                                 <div class="list-group-item">
                                     <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1">New enrollment created</h6>
+                                        <h6 style="cursor: pointer; color: rgb(53, 53, 139);" class="mb-1">New
+                                            enrollment created
+                                        </h6>
                                         <small class="text-muted">2 hours ago</small>
                                     </div>
                                     <p class="mb-1">Employee EMP001 enrolled in Health Insurance Premium</p>
                                 </div>
                                 <div class="list-group-item">
                                     <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1">Claim approved</h6>
+                                        <h6 style="cursor: pointer; color: rgb(65, 143, 78);" class="mb-1">Claim
+                                            approved</h6>
                                         <small class="text-muted">5 hours ago</small>
                                     </div>
                                     <p class="mb-1">Medical claim for 1,500,000 VND approved</p>
                                 </div>
                                 <div class="list-group-item">
                                     <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1">New employee added</h6>
+                                        <h6 style="cursor: pointer; color: rgb(153, 45, 54);" class="mb-1">New employee
+                                            added</h6>
                                         <small class="text-muted">1 day ago</small>
                                     </div>
                                     <p class="mb-1">Employee EMP011 added to IT Department</p>
@@ -134,18 +138,25 @@
                         </div>
                         <div class="card-body">
                             <div class="d-grid gap-2">
-                                <a href="<c:url value='/employee/new'/>" class="btn btn-outline-primary">
-                                    <i class="bi bi-person-plus"></i> Add Employee
+                                <sec:authorize access="hasAnyRole('ADMIN', 'HR_MANAGER')">
+                                    <a href="<c:url value='/employee/new'/>" class="btn btn-outline-primary">
+                                        <i class="bi bi-person-plus"></i> Add Employee
+                                    </a>
+                                    <a href="<c:url value='/hr/enrollment/new'/>" class="btn btn-outline-success">
+                                        <i class="bi bi-plus-circle"></i> New Enrollment
+                                    </a>
+                                </sec:authorize>
+                                <a href="<c:url value='/self-service/claims'/>" class="btn btn-outline-warning">
+                                    <i class="bi bi-file-earmark-medical"></i> Create Claim
                                 </a>
-                                <a href="<c:url value='/enrollment/new'/>" class="btn btn-outline-success">
-                                    <i class="bi bi-plus-circle"></i> New Enrollment
+                                <a href="<c:url value='/self-service/benefits'/>" class="btn btn-outline-warning">
+                                    <i class="bi bi-file-earmark-medical"></i> Enroll
                                 </a>
-                                <a href="<c:url value='/claim'/>" class="btn btn-outline-warning">
-                                    <i class="bi bi-file-earmark-medical"></i> View Claims
-                                </a>
-                                <a href="<c:url value='/report'/>" class="btn btn-outline-info">
-                                    <i class="bi bi-bar-chart"></i> Generate Report
-                                </a>
+                                <sec:authorize access="hasAnyRole('ADMIN', 'HR_MANAGER', 'MANAGER')">
+                                    <a href="<c:url value='/report'/>" class="btn btn-outline-info">
+                                        <i class="bi bi-bar-chart"></i> Generate Report
+                                    </a>
+                                </sec:authorize>
                             </div>
                         </div>
                     </div>

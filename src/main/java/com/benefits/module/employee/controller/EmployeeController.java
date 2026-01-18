@@ -1,9 +1,13 @@
 package com.benefits.module.employee.controller;
 
+import com.benefits.common.Constants;
+import com.benefits.module.auth.entity.User;
+import com.benefits.module.auth.service.AuthService;
 import com.benefits.module.department.service.DepartmentService;
 import com.benefits.module.employee.entity.Employee;
 import com.benefits.module.employee.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +22,21 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
     private final DepartmentService departmentService;
+    private final AuthService authService;
 
     @GetMapping
-    public String listEmployees(Model model) {
-        List<Employee> employees = employeeService.getAllEmployees();
+    public String listEmployees(Model model,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Long departmentId,
+            @RequestParam(required = false) String position,
+            @RequestParam(required = false) String status) {
+        List<Employee> employees = employeeService.searchEmployees(keyword, departmentId, position, status);
         model.addAttribute("employees", employees);
+        model.addAttribute("departments", departmentService.getAllDepartments());
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("selectedDept", departmentId);
+        model.addAttribute("selectedPos", position);
+        model.addAttribute("selectedStatus", status);
         return "employee/employee-list";
     }
 
@@ -50,10 +64,24 @@ public class EmployeeController {
     }
 
     @PostMapping("/save")
-    public String saveEmployee(@ModelAttribute Employee employee, RedirectAttributes redirectAttributes) {
+    public String saveEmployee(@ModelAttribute Employee employee,
+            @RequestParam(required = false) Boolean createAccount,
+            RedirectAttributes redirectAttributes) {
         try {
             if (employee.getId() == null) {
-                employeeService.createEmployee(employee);
+                Employee saved = employeeService.createEmployee(employee);
+                if (Boolean.TRUE.equals(createAccount)) {
+                    String tempPassword = "123456";
+                    User user = new User();
+                    user.setUsername("employee" + saved.getId());
+                    user.setPassword(tempPassword);
+                    user.setEmail(saved.getEmail());
+                    user.setRole(Constants.ROLE_EMPLOYEE);
+                    user.setEmployee(saved);
+                    user.setActive(true);
+                    authService.createUser(user);
+                    employeeService.updateEmployee(saved.getId(), saved);
+                }
                 redirectAttributes.addFlashAttribute("success", "Employee created successfully");
             } else {
                 employeeService.updateEmployee(employee.getId(), employee);
@@ -91,10 +119,18 @@ public class EmployeeController {
     }
 
     @GetMapping("/search")
-    public String searchEmployees(@RequestParam String keyword, Model model) {
-        List<Employee> employees = employeeService.searchEmployees(keyword);
-        model.addAttribute("employees", employees);
-        model.addAttribute("keyword", keyword);
-        return "employee/employee-list";
+    public String searchEmployeesRedirect(@RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Long departmentId,
+            @RequestParam(required = false) String position,
+            @RequestParam(required = false) String status) {
+        // Redirect to main list with query params for consistent handling
+        StringBuilder url = new StringBuilder("redirect:/employee?");
+        if (keyword != null)
+            url.append("keyword=").append(keyword).append("&");
+        if (departmentId != null)
+            url.append("departmentId=").append(departmentId).append("&");
+        if (status != null)
+            url.append("status=").append(status);
+        return url.toString();
     }
 }

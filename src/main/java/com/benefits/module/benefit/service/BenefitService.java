@@ -49,6 +49,10 @@ public class BenefitService {
         return benefitPlanRepository.findAll();
     }
 
+    public List<BenefitPlan> searchBenefitPlans(String keyword, Long typeId, Boolean active) {
+        return benefitPlanRepository.searchPlans(keyword, typeId, active);
+    }
+
     public List<BenefitPlan> getActiveBenefitPlans() {
         return benefitPlanRepository.findByActiveTrue();
     }

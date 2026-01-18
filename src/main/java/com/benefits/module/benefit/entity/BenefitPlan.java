@@ -53,6 +53,18 @@ public class BenefitPlan {
     @Column(name = "expiry_date")
     private LocalDate expiryDate;
 
+    @Column(name = "limit_value", precision = 15, scale = 2)
+    private BigDecimal limitValue;
+
+    @Column(name = "limit_type", length = 20)
+    private String limitType; // AMOUNT, PERCENTAGE
+
+    @Column(name = "processing_workflow", columnDefinition = "TEXT")
+    private String processingWorkflow;
+
+    @Column(name = "important_notes", columnDefinition = "TEXT")
+    private String importantNotes;
+
     @Column(nullable = false)
     private Boolean active = true;
 

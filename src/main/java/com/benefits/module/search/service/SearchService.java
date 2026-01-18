@@ -21,7 +21,7 @@ public class SearchService {
     public Map<String, Object> globalSearch(String keyword) {
         Map<String, Object> results = new HashMap<>();
 
-        List<Employee> employees = employeeRepository.searchByKeyword(keyword);
+        List<Employee> employees = employeeRepository.searchEmployees(keyword, null, null, null);
         results.put("employees", employees);
 
         // Simple search for benefit plans by name

@@ -14,6 +14,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private final CustomAuthenticationSuccessHandler successHandler;
+
+    public SecurityConfig(CustomAuthenticationSuccessHandler successHandler) {
+        this.successHandler = successHandler;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -22,19 +28,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Disable for simplicity, enable in production
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/auth/logout", "/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/manager/**").hasAnyRole("ADMIN", "MANAGER")
-                        .requestMatchers("/hr/**", "/employee/**", "/department/**", "/benefit/**",
-                                "/enrollment/**", "/claim/**", "/report/**", "/search/**")
-                        .hasAnyRole("ADMIN", "MANAGER", "HR")
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 .formLogin(form -> form
                         .loginPage("/auth/login")
                         .loginProcessingUrl("/auth/login")
-                        .defaultSuccessUrl("/dashboard", true)
+                        .successHandler(successHandler)
                         .failureUrl("/auth/login?error=true")
                         .permitAll())
                 .logout(logout -> logout

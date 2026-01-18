@@ -35,16 +35,15 @@
                             </div>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span><i class="bi bi-building me-2"></i> Department</span>
-                                    <span class="fw-bold text-primary">${employee.department.name}</span>
+                                    <span><i class="bi bi-person-fill-gear me-2"></i> Role Type</span>
+                                    <span class="badge bg-light text-dark border">Universal</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span><i class="bi bi-qr-code me-2"></i> Employee Code</span>
-                                    <span class="fw-bold">${employee.employeeCode}</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span><i class="bi bi-calendar-check me-2"></i> Hire Date</span>
-                                    <span>${employee.hireDate}</span>
+                                    <span><i class="bi bi-cash-stack me-2"></i> Basic Salary</span>
+                                    <span class="fw-bold text-success">
+                                        <fmt:formatNumber value="${employee.basicSalary}" type="currency"
+                                            currencySymbol="$" />
+                                    </span>
                                 </li>
                             </ul>
                         </div>
@@ -54,9 +53,15 @@
                                 <h5 class="mb-0">Contact Information</h5>
                             </div>
                             <div class="card-body">
-                                <p class="mb-2"><i class="bi bi-envelope me-2"></i> ${employee.email}</p>
-                                <p class="mb-0"><i class="bi bi-phone me-2"></i> ${not empty employee.phone ?
+                                <p class="mb-2"><i class="bi bi-envelope fill me-2 text-primary"></i> ${employee.email}
+                                </p>
+                                <p class="mb-2"><i class="bi bi-telephone fill me-2 text-primary"></i> ${not empty
+                                    employee.phone ?
                                     employee.phone : 'N/A'}</p>
+                                <hr>
+                                <div class="small text-muted mb-1">Residential Address</div>
+                                <p class="mb-0 small">${not empty employee.address ? employee.address : 'No address
+                                    provided'}</p>
                             </div>
                         </div>
                     </div>
@@ -64,11 +69,60 @@
                     <!-- Main Content -->
                     <div class="col-md-8">
                         <div class="card shadow-sm mb-4">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Personal Profile</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="p-3 border rounded bg-light">
+                                            <div class="text-muted small mb-1">Full Identity</div>
+                                            <div class="fw-bold h5 mb-0">${employee.fullName}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="p-3 border rounded bg-light">
+                                            <div class="text-muted small mb-1">Gender</div>
+                                            <div class="fw-bold">${not empty employee.gender ? employee.gender : 'N/A'}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="p-3 border rounded bg-light">
+                                            <div class="text-muted small mb-1">Birth Date</div>
+                                            <div class="fw-bold">
+                                                <fmt:parseDate value="${employee.dateOfBirth}" pattern="yyyy-MM-dd"
+                                                    var="dob" />
+                                                <fmt:formatDate value="${dob}" pattern="MMM dd, yyyy" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3 border rounded bg-light">
+                                            <div class="text-muted small mb-1">Corporate ID</div>
+                                            <div class="fw-bold text-primary">${employee.employeeCode}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3 border rounded bg-light">
+                                            <div class="text-muted small mb-1">Onboarding Date</div>
+                                            <div class="fw-bold">
+                                                <fmt:parseDate value="${employee.hireDate}" pattern="yyyy-MM-dd"
+                                                    var="hdate" />
+                                                <fmt:formatDate value="${hdate}" pattern="MMM dd, yyyy" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card shadow-sm">
                             <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">Active Benefits</h5>
+                                <h5 class="mb-0">Active Benefit Enrollments</h5>
                                 <a href="<c:url value='/enrollment/new?employeeId=${employee.id}'/>"
                                     class="btn btn-sm btn-outline-success">
-                                    <i class="bi bi-plus"></i> Enroll in Benefit
+                                    <i class="bi bi-lightning-charge"></i> New Enrollment
                                 </a>
                             </div>
                             <div class="card-body p-0">
@@ -79,41 +133,18 @@
                                                 <th>Benefit Plan</th>
                                                 <th>Effective Date</th>
                                                 <th>Contribution</th>
-                                                <th>Status</th>
+                                                <th class="text-end">Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <!-- This would be populated from Enrollment module -->
                                             <tr>
-                                                <td colspan="4" class="text-center text-muted py-4">
-                                                    No active benefits found.
+                                                <td colspan="4" class="text-center text-muted py-5">
+                                                    <i class="bi bi-shield-lock display-6 d-block mb-3"></i>
+                                                    No active benefits discovered for this record.
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card shadow-sm">
-                            <div class="card-header bg-white">
-                                <h5 class="mb-0">Personal Information</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <p class="text-muted mb-1">Full Name</p>
-                                        <p class="fw-bold">${employee.fullName}</p>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <p class="text-muted mb-1">Date of Birth</p>
-                                        <p class="fw-bold">${not empty employee.dateOfBirth ? employee.dateOfBirth :
-                                            'N/A'}</p>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <p class="text-muted mb-1">Gender</p>
-                                        <p class="fw-bold">N/A</p>
-                                    </div>
                                 </div>
                             </div>
                         </div>

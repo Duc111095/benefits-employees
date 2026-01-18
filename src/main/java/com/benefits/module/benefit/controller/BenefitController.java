@@ -42,11 +42,28 @@ public class BenefitController {
         return "redirect:/benefit/types";
     }
 
+    @GetMapping("/types/edit/{id}")
+    public String showEditTypeForm(@PathVariable Long id, Model model) {
+        return benefitService.getBenefitTypeById(id)
+                .map(type -> {
+                    model.addAttribute("benefitType", type);
+                    model.addAttribute("isEdit", true);
+                    return "benefit/benefit-type-form";
+                }).orElse("redirect:/benefit/types");
+    }
+
     // --- Benefit Plans ---
 
     @GetMapping("/plans")
-    public String listBenefitPlans(Model model) {
-        model.addAttribute("benefitPlans", benefitService.getAllBenefitPlans());
+    public String listBenefitPlans(Model model,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Long typeId,
+            @RequestParam(required = false) Boolean active) {
+        model.addAttribute("benefitPlans", benefitService.searchBenefitPlans(keyword, typeId, active));
+        model.addAttribute("benefitTypes", benefitService.getAllBenefitTypes());
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("selectedType", typeId);
+        model.addAttribute("selectedStatus", active);
         return "benefit/benefit-plan-list";
     }
 

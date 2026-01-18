@@ -8,14 +8,15 @@ This system digitizes employee benefits management with centralized data, histor
 
 ### Key Features
 
-- **Employee Management**: Manage employee master data and organizational structure
-- **Department Management**: Organize employees by departments
+- **Employee Management**: Advanced master data management with gender, address, and salary details
+- **Department Management**: Organize employees by departments with manager assignment
 - **Benefits Management**: Define benefit types and plans with eligibility criteria
-- **Enrollment Management**: Assign benefits to employees with history tracking
-- **Claims Processing**: Record benefit usage with approval workflow and document attachments
-- **Reporting**: Generate statistics and cost analysis reports
-- **Search**: Global search functionality across the system
-- **Role-Based Access**: ADMIN, MANAGER, and HR roles with different permissions
+- **Enrollment Management**: Assign benefits to employees with automated history tracking
+- **Claims Processing**: Record benefit usage with attachments and multi-stage approval
+- **Notification System**: Real-time event alerts for enrollments, claims, and HR broadcasts
+- **Reporting**: Analytical dashboards for cost and enrollment statistics
+- **Search**: Advanced multi-filter search across all modules
+- **Role-Based Access**: Granular control for ADMIN, HR_MANAGER, MANAGER, and EMPLOYEE
 
 ## Technology Stack
 
@@ -152,9 +153,15 @@ benefit-employees/
 - Enrollment statistics
 - Export to Excel/PDF
 
-### Module 8: Search Module
-- Global search across employees, benefits, enrollments, claims
-- Advanced filtering
+### Module 8: Search & Analytics
+- Multi-criteria filtering for employees (Dept, Status, Position)
+- Global search integration for all business entities
+
+### Module 9: Notification System
+- Personal notification inbox for all users
+- Automated triggers for system events (Enrollment approval, Claim status)
+- HR Broadcast feature for system-wide announcements
+- Unread count badges in global navigation
 
 ## Database Schema
 

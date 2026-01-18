@@ -44,8 +44,17 @@ public class Employee {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @Column(length = 100)
+    @Column(length = 20)
     private String position;
+
+    @Column(length = 10)
+    private String gender; // MALE, FEMALE, OTHER
+
+    @Column(columnDefinition = "TEXT")
+    private String address;
+
+    @Column(name = "basic_salary")
+    private Double basicSalary;
 
     @Column(length = 20)
     private String status = "ACTIVE"; // ACTIVE, INACTIVE, TERMINATED
